@@ -17,14 +17,14 @@ my $VERBOSE = 0;
 my $DEBUG = 0;
 
 # Commandline
-my $opt_string = "vdt:h:u:p:c:";
+my $opt_string = "hvdt:H:u:p:c:";
 getopts("$opt_string", \my %opt) or usage() and exit(1);
 
 $VERBOSE = 1 if $opt{v};
 $DEBUG =1 if $opt{d};
 
 # Db vars
-my $DBHOST = $opt{h};
+my $DBHOST = $opt{H};
 my $DBUSER = $opt{u};
 my $DBPASS = $opt{p};
 my $DB = "test";
@@ -38,6 +38,10 @@ debug("Connecting to: ".$DBHOST." using ".$DBUSER." with password ".$DBPASS.".\n
 debug("TYPE: ".$opt{t}."\n");
 
 my $dbh = DBI->connect("DBI:mysql:$DB;host=$DBHOST;port=3306;", $DBUSER, $DBPASS);
+
+if ($dbh) {
+    debug("Connected.\n")
+}
 
 # Subs
 sub usage() {
