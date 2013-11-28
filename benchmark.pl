@@ -27,7 +27,7 @@ $DEBUG =1 if $opt{d};
 my $DBHOST = $opt{H};
 my $DBUSER = $opt{u};
 my $DBPASS = $opt{p};
-my $DB = "test";
+my $DB = "benchmark";
 
 if ($opt{h}) {
     usage();
