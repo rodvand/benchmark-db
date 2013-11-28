@@ -41,6 +41,10 @@ my $dbh = DBI->connect("DBI:mysql:$DB;host=$DBHOST;port=3306;", $DBUSER, $DBPASS
 
 if ($dbh) {
     debug("Connected.\n")
+    
+    # Drop tables if exist
+    my $query - $dbh->prepare("DROP TABLE IF EXISTS benchmark");
+    $query->execute() || die "Something went wrong: $DBI::errstr\n";
 }
 
 # Subs
