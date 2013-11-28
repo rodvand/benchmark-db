@@ -43,7 +43,7 @@ if ($dbh) {
     debug("Connected.\n")
     
     # Drop tables if exist
-    my $query - $dbh->prepare("DROP TABLE IF EXISTS benchmark");
+    my $query = $dbh->prepare("DROP TABLE IF EXISTS benchmark");
     $query->execute() || die "Something went wrong: $DBI::errstr\n";
 }
 
