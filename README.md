@@ -5,7 +5,7 @@ Perl script to benchmark a MySQL or MariaDB database.
 Database named "benchmark". Provided user must have access to SELECT, UPDATE, DELETE on the test database.
 
 ## How to run
-./benchmark.pl -H <host> -u <user> -p <password> -c <count> [-vdh]
+`./benchmark.pl -H <host> -u <user> -p <password> -c <count> [-vdh]`
 
 Options:
     -h for help
@@ -15,4 +15,3 @@ Options:
     -c <count> how many tests should be run in each section
     -v for verbose
     -d for debug
-
