@@ -11,6 +11,7 @@
 use strict "vars";
 use Getopt::Std;
 use DBI;
+use Time::HiRes;
 
 # Global vars
 my $VERBOSE = 0;
@@ -40,11 +41,92 @@ debug("TYPE: ".$opt{t}."\n");
 my $dbh = DBI->connect("DBI:mysql:$DB;host=$DBHOST;port=3306;", $DBUSER, $DBPASS);
 
 if ($dbh) {
-    debug("Connected.\n")
+    debug("Connected.\n");
+    my $query;
     
-    # Drop tables if exist
-    my $query = $dbh->prepare("DROP TABLE IF EXISTS benchmark");
+    # Start on scratch - drop benchmark table if it already exists
+    $query = $dbh->prepare("DROP TABLE IF EXISTS benchmark");
     $query->execute() || die "Something went wrong: $DBI::errstr\n";
+    debug("Dropped table benchmark if it already existed.\n"); 
+
+    # Create our benchmark table
+    $query = $dbh->prepare("CREATE TABLE benchmark (
+                                id INT NOT NULL AUTO_INCREMENT,
+                                message varchar(40) NOT NULL,
+                                PRIMARY KEY (id)
+                                )");
+    $query->execute() || die "Something went wrong: $DBI::errstr\n";
+    debug("Created benchmark table.\n");
+    verbose("Test table created.\n");
+
+    # Ok, our tables are created now let's start the testing
+    # Test-data: /usr/share/dict/words > words.txt
+    # Number of words: 235886
+    # Tests will be in this order: INSERT, SELECT, UPDATE, DELETE
+    # Each test segment will run <c> times
+    my $COUNT = $opt{c};
+    debug("COUNT is: $COUNT\n");
+    verbose("Running $COUNT tests of each function.\n");
+    
+    open FILE, '<', 'words.txt';
+    my @words;
+    my $j = 0;
+    while(my $line = <FILE>) {
+        push(@words, $line); 
+        last if $j == $COUNT;
+    }
+
+    # INSERT
+    my $i = 0;
+    my $start_time = [Time::HiRes::gettimeofday()];
+    foreach my $line (@words) {
+        $query = $dbh->prepare('INSERT INTO benchmark (message)
+                                VALUES(?)');
+        $query->execute($line);
+        $i++;
+        last if $i == $COUNT;
+    }
+    my $diff = Time::HiRes::tv_interval($start_time);
+    debug("Time for $COUNT INSERT: $diff\n");
+    
+    # SELECT
+    my $i = 0;
+    $start_time = [Time::HiRes::gettimeofday()];
+    foreach my $line (@words) {
+        $query = $dbh->prepare('SELECT * FROM benchmark 
+                                WHERE message = ?');
+        $query->execute($line);
+        $i++;
+        last if $i == $COUNT;
+    }
+    $diff = Time::HiRes::tv_interval($start_time);
+    debug("Time for $COUNT SELECT: $diff\n");
+
+    # UPDATE
+    my $i = 0;
+    $start_time = [Time::HiRes::gettimeofday()];
+    my @revers = reverse(@words);
+    foreach my $line (@words) {
+        $query = $dbh->prepare('UPDATE benchmark SET message = ? 
+                                WHERE message = ?');
+        $query->execute($revers[$i], $line);
+        $i++;
+        last if $i == $COUNT;
+    }
+    $diff = Time::HiRes::tv_interval($start_time);
+    debug("Time for $COUNT UPDATE: $diff\n");
+
+    # DELETE
+    my $i = 0;
+    $start_time = [Time::HiRes::gettimeofday()];
+    foreach my $line (@words) {
+        $query = $dbh->prepare('DELETE FROM benchmark WHERE message = ?');
+        $query->execute($line);
+        $i++;
+        last if $i == $COUNT;
+    }
+    $diff = Time::HiRes::tv_interval($start_time);
+    debug("Time for $COUNT DELETE: $diff\n");
 }
 
 # Subs
