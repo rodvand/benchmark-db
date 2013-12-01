@@ -2,7 +2,7 @@
 Perl script to benchmark a MySQL or MariaDB database.
 
 ## Requisites
-Database named "benchmark". Provided user must have access to SELECT, UPDATE, DELETE on the test database.
+Database named "benchmark" (will not be created). Provided user must have access to SELECT, UPDATE, DELETE on the test database.
 
 Tested with: MySQL, MariaDB 5.5, MariaDB 10
 
