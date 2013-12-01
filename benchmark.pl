@@ -18,7 +18,7 @@ my $VERBOSE = 0;
 my $DEBUG = 0;
 
 # Commandline
-my $opt_string = "hvdt:H:u:p:c:";
+my $opt_string = "hvdt:H:u:p:c:o";
 getopts("$opt_string", \my %opt) or usage() and exit(1);
 
 $VERBOSE = 1 if $opt{v};
@@ -34,6 +34,11 @@ if ($opt{h}) {
     usage();
     exit(0);
 }
+
+# For cleaner output
+my @output;
+push(@output, $opt{t});
+push(@output, $opt{c});
 
 debug("Connecting to: ".$DBHOST." using ".$DBUSER." with password ".$DBPASS.".\n");
 debug("TYPE: ".$opt{t}."\n");
@@ -87,6 +92,7 @@ if ($dbh) {
         last if $i == $COUNT;
     }
     my $diff = Time::HiRes::tv_interval($start_time);
+    push(@output, $diff);
     debug("Time for $COUNT INSERT: $diff\n");
     
     # SELECT
@@ -100,6 +106,7 @@ if ($dbh) {
         last if $i == $COUNT;
     }
     $diff = Time::HiRes::tv_interval($start_time);
+    push(@output, $diff);
     debug("Time for $COUNT SELECT: $diff\n");
 
     # UPDATE
@@ -114,6 +121,7 @@ if ($dbh) {
         last if $i == $COUNT;
     }
     $diff = Time::HiRes::tv_interval($start_time);
+    push(@output, $diff);
     debug("Time for $COUNT UPDATE: $diff\n");
 
     # DELETE
@@ -126,18 +134,26 @@ if ($dbh) {
         last if $i == $COUNT;
     }
     $diff = Time::HiRes::tv_interval($start_time);
+    push(@output, $diff);
     debug("Time for $COUNT DELETE: $diff\n");
+}
+
+if ($opt{o}) {
+    my $out = join(',', @output);
+    print $out."\n";
 }
 
 # Subs
 sub usage() {
     print "Usage:\n";
-    print "-h for help (this bit)\n";
-    print "-t <databse type> Mysql (my) or MariaDB (ma)\n";
-    print "-H <host>\n";
-    print "-u <user>\n";
-    print "-p <password>\n";
-    print "-c <count> the number of queries to be run\n";
+    print "\t-h for help (this bit)\n";
+    print "\t-t <databse type> Mysql (my) or MariaDB (ma)\n";
+    print "\t-H <host>\n";
+    print "\t-u <user>\n";
+    print "\t-p <password>\n";
+    print "\t-c <count> the number of queries to be run\n";
+    print "\t-o print the output in a comma-separated list \
+        \t(type,count,insert,select,update,delete)\n"
 }
 
 sub verbose {
