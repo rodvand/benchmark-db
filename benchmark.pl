@@ -134,7 +134,7 @@ sub usage() {
     print "Usage:\n";
     print "-h for help (this bit)\n";
     print "-t <databse type> Mysql (my) or MariaDB (ma)\n";
-    print "-h <host>\n";
+    print "-H <host>\n";
     print "-u <user>\n";
     print "-p <password>\n";
     print "-c <count> the number of queries to be run\n";
