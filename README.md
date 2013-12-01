@@ -10,8 +10,12 @@ Database named "benchmark". Provided user must have access to SELECT, UPDATE, DE
 Options:
     -h for help
     -H <host> for the host where the database is located
-    -u <user> for the dayabase user
+    -u <user> for the database user
     -p <password> the password for the database user
     -c <count> how many tests should be run in each section
     -v for verbose
     -d for debug
+
+## TODO
+* Make it an option to not have to provide password on the command line
+* Create an output option for continous runs (likely comma-seperated)
