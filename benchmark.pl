@@ -12,22 +12,30 @@ use strict "vars";
 use Getopt::Std;
 use DBI;
 use Time::HiRes;
+use Term::ReadPassword;
 
 # Global vars
 my $VERBOSE = 0;
 my $DEBUG = 0;
 
 # Commandline
-my $opt_string = "hvdt:H:u:p:c:o";
+my $opt_string = "hvdt:H:u:p:c:oP";
 getopts("$opt_string", \my %opt) or usage() and exit(1);
 
 $VERBOSE = 1 if $opt{v};
-$DEBUG =1 if $opt{d};
+$DEBUG = 1 if $opt{d};
 
 # Db vars
 my $DBHOST = $opt{H};
 my $DBUSER = $opt{u};
-my $DBPASS = $opt{p};
+my $DBPASS;
+
+if ($opt{P}) {
+    $DBPASS = read_password('MySQL password for '.$DBUSER.': ');
+} else {
+    $DBPASS = $opt{p};
+}
+
 my $DB = "benchmark";
 
 if ($opt{h}) {
