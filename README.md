@@ -23,5 +23,4 @@ Options:
 Output is in this form: type,count,insert,select,update,delete
 
 ## TODO
-* Make it an option to not have to provide password on the command line
 * Create an output option for continous runs (likely comma-seperated)
