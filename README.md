@@ -23,4 +23,4 @@ Tested with: MySQL, MariaDB 5.5, MariaDB 10
 Output is in this form: type,count,insert,select,update,delete
 
 ## TODO
-* Create an output option for continous runs (likely comma-seperated)
+* Create a more detailed performance monitor - for each insert statement etc to see when the performance hits a wall
