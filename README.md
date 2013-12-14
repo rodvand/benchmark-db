@@ -9,7 +9,7 @@ Tested with: MySQL, MariaDB 5.5, MariaDB 10
 ## How to run
 `./benchmark.pl -H <host> -u <user> -p <password> -c <count> [-vdh]`
 
-Options:
+`Options:
     -h for help
     -t <type> for your output
     -H <host> for the host where the database is located
@@ -18,7 +18,7 @@ Options:
     -c <count> how many tests should be run in each section
     -v for verbose
     -d for debug
-    -o for output.
+    -o for output.`
 
 Output is in this form: type,count,insert,select,update,delete
 
